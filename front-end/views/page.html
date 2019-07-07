@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <%- include header.tmpl.html %>
+<body>
+  <%- include nav.tmpl.html %>
+
+<div class="container">
+  <div class="alert alert-info text-center" role="alert">
+      <a href="#" id="show-dialog" class="alert-link">Use {NAME} to substitute it with the sender name.</a>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+        <table id="result" class="mdl-data-table mdl-js-data-table mdl-data-table__cell--non-numeric mdl-shadow--2dp">
+            <thead>
+            <tr>
+                <th class="mdl-data-table__cell--non-numeric">ID</th>
+                <th>Message</th>
+                <th>Answer</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-id="id">
+                <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
+                <td class="val">25</td>
+                <td>
+                    <button class="delete mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                        <i class="material-icons">delete forever</i>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+  </div> <!-- row -->
+
+    <dialog id="new" class="mdl-dialog" style="width: 90%;">
+        <h4 class="mdl-dialog__title">Add message/answer</h4>
+        <div class="mdl-dialog__content">
+            <form action="#">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 90%;">
+                    <input class="mdl-textfield__input" type="text" id="botta">
+                    <label class="mdl-textfield__label" for="botta">Message</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 90%;">
+                    <input class="mdl-textfield__input" type="text" id="risposta">
+                    <label class="mdl-textfield__label" for="risposta">Answer</label>
+                </div>
+            </form>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button save">Save</button>
+            <button type="button" class="mdl-button close">Cancel</button>
+        </div>
+    </dialog>
+
+    <dialog id="edit" class="mdl-dialog">
+        <h4 class="mdl-dialog__title">Do you really want to delete it?</h4>
+        <div class="mdl-dialog__content">
+            <form action="#">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" disabled id="botta_edit">
+                    <input class="mdl-textfield__input" type="hidden" disabled id="botta_id">
+                </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" disabled id="risposta_edit">
+                </div>
+            </form>
+        </div>
+        <div class="mdl-dialog__actions">
+            <button type="button" class="mdl-button deletebtn">Yes</button>
+            <button type="button" class="mdl-button closeEdit">Nope! Go back!</button>
+        </div>
+    </dialog>
+
+<script>
+    var dialog = document.querySelector('#new');
+    var dialog_edit = document.querySelector('#edit');
+    var showDialogButton = document.querySelector('#show-dialog');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+      dialogPolyfill.registerDialog(dialog_edit);
+    }
+    showDialogButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+
+$(document).ready(function(){
+    $("#result").delegate('.delete','click', function(){
+        var t = $(this).parent().parent().find('.val').html();
+        var id = $(this).parent().parent().attr('data-id');
+        $("#botta_edit").val(t);
+        $("#botta_id").val(id);
+        dialog_edit.showModal();
+    });
+
+    $(".deletebtn").on('click', function() {
+        var _id = $("#botta_id").val();
+        var url = "/delete";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {id: _id, col: "<%= title %>"}
+        })
+        .done(function() {
+            //alert( "second success" );
+            renderTable();
+            dialog_edit.close();
+        })
+        .fail(function(data) {
+            alert( "error: " + data);
+            dialog_edit.close();
+        });
+    });
+
+
+    renderTable();
+
+    function renderTable(){
+        var url = "/read-data";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {type : "<%= title %>"}
+        })
+        .done(function(data) {
+            var obj = JSON.parse(JSON.stringify( data ));
+            var table = $("#result > tbody");
+            table.find("tr").each(function(){ $(this).remove() });
+            //console.log(table);
+            var j = 0;
+            for(var i in obj){
+                var elm = obj[i];
+                var id = elm._id;
+                var txt = elm.q;
+                var and = elm.a;
+                if(and.startsWith("static/img")){
+                    and = "<img src=\"" + elm.a + "\" width='100' />";
+                }
+                var t = elm.t;
+                var line = $("<tr>");
+                var tdTxt = $("<td>").html(j++);
+                var tdT = $("<td class=\"val\">").html(txt);
+                var tdA = $("<td class=\"val\">").html(and);
+                var tdBtn = $("<td>").html("<button class=\"delete mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored\"><i class=\"material-icons\">delete forever</i></button>");
+                tdTxt.appendTo(line);
+                tdT.appendTo(line);
+                tdA.appendTo(line);
+                tdBtn.appendTo(line);
+                line.attr('data-id', id);
+                line.appendTo(table);
+            }
+        })
+    }
+
+    $(".closeEdit").on('click', function(){
+        dialog_edit.close();
+    });
+    $(".save").on('click', function(){
+        var bot = $("#botta").val();
+        var risp = $("#risposta").val();
+        var url = "/insBotta";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {botta: bot, risposta: risp, col: "<%= title %>"}
+        })
+        .done(function() {
+            //alert( "second success" );
+            renderTable();
+            dialog.close();
+        })
+        .fail(function(data) {
+            alert( "error: " + data);
+            dialog.close();
+        });
+    });
+});
+</script>
+
+</div>
+
+</body>
+</html>
