@@ -25,12 +25,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/sclorg/nodejs-ex.git"
+    "url": "https://github.com/thisthat/telegram-bot.git"
   },
   "author": "Giovanni Liva <giovanni.liva.91@gmail.com>",
   "license": "CC-BY-1.0",
   "bugs": {
-    "url": "http://github.com/sclorg/nodejs-ex/issues"
+    "url": "https://github.com/thisthat/telegram-bot/issues"
   },
-  "homepage": "http://github.com/sclorg/nodejs-ex"
+  "homepage": "https://github.com/thisthat/telegram-bot"
 }
