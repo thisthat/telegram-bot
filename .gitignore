@@ -2,3 +2,4 @@
 **/static/images
 *.log
 **/front-end/
+**/node_modules/
