@@ -12,13 +12,6 @@ var busboy = require('connect-busboy')
 
 var routes = require('./routes/index');
 
-Object.assign=require('object-assign')
-
-//read from DB
-var falco = [""];
-var mattia = [""];
-var borto = [""];
-
 // Pass in the env
 var secretUser = "admin";
 var secretPassword = process.env.SERVER_PASSWORD;
@@ -31,11 +24,12 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "",
     mongoUser = process.env.MONGODB_USER,
-    mongoPassword = process.env.MONGODB_PASSWORD;
+    mongoPassword = process.env.MONGODB_PASSWORD,
+    mongoAddress  = process.env.MONGODB_DB_URL;
 
 
 
-mongoURL = "mongodb://" + mongoUser + ":" + mongoPassword + "@cluster0-shard-00-00-36koo.gcp.mongodb.net:27017,cluster0-shard-00-01-36koo.gcp.mongodb.net:27017,cluster0-shard-00-02-36koo.gcp.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
+mongoURL = "mongodb://" + mongoUser + ":" + mongoPassword + mongoAddress;
 
 var db = null,
     dbDetails = new Object();
