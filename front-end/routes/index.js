@@ -7,9 +7,17 @@ app.get('/', function (req, res) {
   res.render('index.html', { title : "", pages : req.pages});
 });
 
+app.get('/status', function (req, res) {
+  var r = {
+    server: true,
+    bot: true
+  };
+  res.json(r);
+});
+
 app.get('/:route', function (req, res) {
-    var r = req.params.route;
-    res.render('page.html', { title : r, pages : req.pages});
+  var r = req.params.route;
+  res.render('page.html', { title : r, pages : req.pages});
 });
 
 app.post('/read-data', function (req, res) {

@@ -16,9 +16,6 @@ var routes = require('./routes/index');
 var secretUser = "admin";
 var secretPassword = process.env.SERVER_PASSWORD;
 
-//console.log(process.env);
-
-
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
@@ -64,7 +61,7 @@ var initDb = function() {
       app.use('/', routes);
     });
 
-    console.log('Connected to MongoDB at: %s', mongoURL);
+    //console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
 initDb();
