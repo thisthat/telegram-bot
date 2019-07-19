@@ -12,6 +12,7 @@ metadata:
   namespace: telegram-bot
   labels:
     app: telegram-bot
+    version: "0.3"
 spec:
   replicas: 1
   selector:
