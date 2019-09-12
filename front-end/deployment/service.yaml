@@ -16,6 +16,7 @@ spec:
   # and forward the request to one of them
   selector:
     app: telegram-bot 
+    tier: front-end
 
   ports:
     # Three types of ports for a service

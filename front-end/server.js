@@ -24,7 +24,10 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoPassword = process.env.MONGODB_PASSWORD,
     mongoAddress  = process.env.MONGODB_DB_URL;
 
-
+var T_URL = process.env.TELEGRAM_BOT_BACKEND_SERVICE_SERVICE_HOST,
+    T_PORT= process.env.TELEGRAM_BOT_BACKEND_SERVICE_SERVICE_PORT;
+var T_URL_FULL = "http://" + T_URL + ":" + T_PORT;
+console.log("Telegram connection on %s:%s\n -- %s -- \n",T_URL, T_PORT, T_URL_FULL);
 
 mongoURL = "mongodb://" + mongoUser + ":" + mongoPassword + mongoAddress;
 
@@ -56,6 +59,9 @@ var initDb = function() {
       app.use(function(req,res,next){
         req.pages = pages;
         req.db = db;
+        req.T_URL = T_URL;
+        req.T_PORT = T_PORT;
+        req.T_URL_FULL = T_URL_FULL;
         next();
       });
       app.use('/', routes);
