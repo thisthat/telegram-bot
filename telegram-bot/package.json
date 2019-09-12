@@ -1,0 +1,33 @@
+{
+  "name": "telegram-bot-sensarisvolti",
+  "version": "0.0.1",
+  "description": "Telegram-Bot Service",
+  "main": "server.js",
+  "dependencies": {
+    "connect-busboy": "0.0.2",
+    "express": "^4.13.4",
+    "express-basic-auth": "^1.1.6",
+    "mocha": "^2.4.5",
+    "mongodb": "^2.1.16",
+    "morgan": "^1.7.0",
+    "slimbot": "^0.8.6"
+  },
+  "engine": {
+    "node": "*",
+    "npm": "*"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "IP=0.0.0.0 PORT=3030 mocha --timeout 5000 tests/*_test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thisthat/telegram-bot.git"
+  },
+  "author": "Giovanni Liva <giovanni.liva.91@gmail.com>",
+  "license": "CC-BY-1.0",
+  "bugs": {
+    "url": "https://github.com/thisthat/telegram-bot/issues"
+  },
+  "homepage": "https://github.com/thisthat/telegram-bot"
+}

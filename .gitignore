@@ -1,4 +1,4 @@
 **/static/img
 **/static/images
 *.log
-**/telegram-bot/
+**/node_modules/
