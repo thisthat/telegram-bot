@@ -48,3 +48,10 @@ table {
 #file_input_file {
   display: none;
 }
+
+.status {
+  margin-top: 7px;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+.toggle.ios .toggle-handle { border-radius: 20px; }

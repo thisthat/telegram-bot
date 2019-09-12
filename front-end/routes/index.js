@@ -1,15 +1,45 @@
 var express = require('express');
 var app = express.Router();
 var mongodb = require('mongodb');
-
+var http = require('http');
 
 app.get('/', function (req, res) {
   res.render('index.html', { title : "", pages : req.pages});
 });
 
+app.get('/status', function (req, res) {
+  var url = req.T_URL;
+  var port = req.T_PORT;
+  http.get({
+    host: url,
+    port: port,
+    path: '/'
+  }, function(response){
+    var body = '';
+    response.on('data', function(d) {
+        body += d;
+    });
+    response.on('end', function() {
+      var bot_read = JSON.parse(body);
+      var r = {
+        server: true,
+        bot: bot_read
+      };
+      res.json(r);
+    });
+  }).on("error", (err) => {
+    var r = {
+      server: true,
+      bot: false,
+      err: err
+    };
+    res.json(r);
+  });;
+});
+
 app.get('/:route', function (req, res) {
-    var r = req.params.route;
-    res.render('page.html', { title : r, pages : req.pages});
+  var r = req.params.route;
+  res.render('page.html', { title : r, pages : req.pages});
 });
 
 app.post('/read-data', function (req, res) {

@@ -12,30 +12,24 @@ var busboy = require('connect-busboy')
 
 var routes = require('./routes/index');
 
-Object.assign=require('object-assign')
-
-//read from DB
-var falco = [""];
-var mattia = [""];
-var borto = [""];
-
 // Pass in the env
 var secretUser = "admin";
 var secretPassword = process.env.SERVER_PASSWORD;
-
-//console.log(process.env);
-
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "",
     mongoUser = process.env.MONGODB_USER,
-    mongoPassword = process.env.MONGODB_PASSWORD;
+    mongoPassword = process.env.MONGODB_PASSWORD,
+    mongoAddress  = process.env.MONGODB_DB_URL;
 
+var T_URL = process.env.TELEGRAM_BOT_BACKEND_SERVICE_SERVICE_HOST,
+    T_PORT= process.env.TELEGRAM_BOT_BACKEND_SERVICE_SERVICE_PORT;
+var T_URL_FULL = "http://" + T_URL + ":" + T_PORT;
+console.log("Telegram connection on %s:%s\n -- %s -- \n",T_URL, T_PORT, T_URL_FULL);
 
-
-mongoURL = "mongodb://" + mongoUser + ":" + mongoPassword + "@cluster0-shard-00-00-36koo.gcp.mongodb.net:27017,cluster0-shard-00-01-36koo.gcp.mongodb.net:27017,cluster0-shard-00-02-36koo.gcp.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
+mongoURL = "mongodb://" + mongoUser + ":" + mongoPassword + mongoAddress;
 
 var db = null,
     dbDetails = new Object();
@@ -65,12 +59,15 @@ var initDb = function() {
       app.use(function(req,res,next){
         req.pages = pages;
         req.db = db;
+        req.T_URL = T_URL;
+        req.T_PORT = T_PORT;
+        req.T_URL_FULL = T_URL_FULL;
         next();
       });
       app.use('/', routes);
     });
 
-    console.log('Connected to MongoDB at: %s', mongoURL);
+    //console.log('Connected to MongoDB at: %s', mongoURL);
   });
 };
 initDb();
