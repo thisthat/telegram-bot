@@ -1,4 +1,4 @@
-FROM node:10-alpine 
+FROM arm32v7/node:10-slim
 
 # Create app directory
 WORKDIR /usr/src/app

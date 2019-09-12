@@ -1,4 +1,6 @@
-**/static/img
-**/static/images
 *.log
 **/node_modules/
+**/secret.yaml
+**/views
+**/static/img
+**/static/images
