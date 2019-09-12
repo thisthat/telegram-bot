@@ -1,0 +1,68 @@
+# deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: front-end-bot-deployment
+  namespace: telegram-bot
+  labels:
+    app: telegram-bot
+    version: "0.1"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-bot
+        tier: front-end
+    spec:
+      containers:
+      - name: front-end-bot
+        image: k8s-master:443/front-end-bot:0.1
+        ports:
+        - containerPort: 8080
+        env:
+          - name: username
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: username
+          - name: password
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: password
+          - name: MONGODB_DB_URL
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: MONGODB_DB_URL
+          - name: SERVER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: SERVER_PASSWORD
+          - name: TELEGRAM_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: TELEGRAM_TOKEN
+          - name: MONGODB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: MONGODB_DATABASE
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: MONGODB_PASSWORD
+          - name: MONGODB_USER
+            valueFrom:
+              secretKeyRef:
+                name: app-connection-data
+                key: MONGODB_USER
+      imagePullSecrets:
+        - name: regcred    

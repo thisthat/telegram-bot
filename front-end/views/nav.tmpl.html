@@ -1,0 +1,55 @@
+<nav class="navbar navbar-default navbar-static-top navbar-inverse">
+  <div class="container">
+      <ul id="nav-bar-menu" class="nav navbar-nav">
+      </ul>
+      <div id="status" class="status">
+            <span id="statusMsg" class="label label-default">default</span>
+            <input id="statusToggle" type="checkbox" checked disabled data-style="ios" data-toggle="toggle" data-onstyle="success" data-offstyle="danger">
+      </div>
+  </div>
+  
+</nav>
+<script>
+    $(document).ready(function(){
+        var url = location.href;
+        url = url.substring(url.lastIndexOf("/")+1);
+        if(url.lastIndexOf("?") > 0)
+            url = url.substring(0,url.lastIndexOf("?"));
+        if(url.lastIndexOf("#") > 0)
+            url = url.substring(0,url.lastIndexOf("#"));
+        //console.log(url);
+        $("li.nav-link").each(function(){
+            var _id = $(this).attr('data-url');
+            if(_id == url) {
+                $(this).addClass('active');
+            } else {
+                $(this).removeClass('active');
+            }
+            //console.log(url , _id);
+        });
+
+        var table = $("#result > tbody");
+        table.find("tr").each(function(){ $(this).remove() });
+
+        $('#statusToggle').change(function() {
+            var enable = $(this).prop('checked');
+            if(enable){
+                $("#statusMsg").html("Active").removeClass('label-danger').addClass('label-success');
+            } else {
+                $("#statusMsg").html("Stopped!").removeClass('label-success').addClass('label-danger');
+            }
+        })
+    
+        //check status
+        $.get("/status", function(data){
+            var botStatus = data.bot;
+            if(botStatus) {
+                $("#statusMsg").html("Active").removeClass('label-default').addClass('label-success');
+                $("#statusToggle").bootstrapToggle('enable');
+                $("#statusToggle").attr('data-onstyle', 'success');
+                $("#statusToggle").attr('data-offstyle', 'danger');
+            }
+        });
+    
+    });
+</script>

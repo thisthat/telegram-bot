@@ -2,4 +2,5 @@
 **/node_modules/
 **/secret.yaml
 **/views
-**/front-end/
+**/static/img
+**/static/images
