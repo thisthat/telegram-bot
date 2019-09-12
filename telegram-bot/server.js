@@ -9,12 +9,15 @@ var busboy = require('connect-busboy');
 var mongodb = require('mongodb');
 const TelegramBot = require('./telegram');
 
-var port = process.env.TELEGRAM_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3030,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
+var port = process.env.TELEGRAM_PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
+    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
+    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "",
     mongoUser = process.env.MONGODB_USER,
     mongoPassword = process.env.MONGODB_PASSWORD,
     mongoAddress  = process.env.MONGODB_DB_URL;
+
+
 
 mongoURL = "mongodb://" + mongoUser + ":" + mongoPassword + mongoAddress;
 
@@ -40,7 +43,7 @@ mongodb.connect(mongoURL, function(err, conn) {
     
 });
 
-
+console.log('Ready to set up the server');
 
 // Pass in the env
 var secretUser = "admin";
@@ -54,10 +57,6 @@ app.use(bodyParser.json());
 app.use(busboy());
 app.use(morgan('combined'))
 app.set('json spaces', 4);
-app.use(basicAuth({
-  users: { secretUser : secretPassword },
-  challenge: true
-}))
 
 app.use('/static', express.static('static'))
 app.use('/static', express.static(path.join(__dirname, 'views/static')))
