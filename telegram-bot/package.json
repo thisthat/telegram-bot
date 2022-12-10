@@ -5,7 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "connect-busboy": "0.0.2",
-    "express": "^4.13.4",
+    "express": "^4.17.3",
     "express-basic-auth": "^1.1.6",
     "mocha": "^2.4.5",
     "mongodb": "^2.1.16",
